@@ -1,0 +1,29 @@
+{
+  "name": "text-score",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mitica/text-score-js.git"
+  },
+  "keywords": [
+    "text",
+    "score"
+  ],
+  "author": "Dumitru Cantea",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mitica/text-score-js/issues"
+  },
+  "homepage": "https://github.com/Mitica/text-score-js#readme",
+  "devDependencies": {
+    "mocha": "^2.5.3"
+  }
+}
