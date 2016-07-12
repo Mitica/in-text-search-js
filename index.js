@@ -1,8 +1,9 @@
 'use strict';
 
 var OPTIONS = {
-	minWordLength: 4,
-	lowercase: true
+	minWordLength: 3,
+	lowercase: true,
+	stopwords: []
 };
 
 function isLetter(w) {
@@ -26,7 +27,16 @@ function defaults(target, source) {
 function getOptions(options) {
 	if (options) {
 		options = defaults({}, options);
+		if (typeof options.stopwords === 'string') {
+			var lang = options.stopwords;
+			if (lang.length !== 2) {
+				throw new Error('Invalid options.stopwords');
+			}
+			lang = lang.toLowerCase();
+			options.stopwords = require('stopwords-json/dist/' + lang);
+		}
 		options = defaults(options, OPTIONS);
+		options.stopwords = options.stopwords || [];
 	} else {
 		options = OPTIONS;
 	}
@@ -34,7 +44,8 @@ function getOptions(options) {
 	return options;
 }
 
-function texthash(text, options) {
+function textmap(text, options) {
+	// console.log(options);
 	var ntext = '';
 	var i = 0;
 	for (i = 0; i < text.length; i++) {
@@ -48,49 +59,56 @@ function texthash(text, options) {
 
 	ntext = ntext.split(/ /g)
 		.filter(function(word) {
-			return word.length >= options.minWordLength;
+			return word.length >= options.minWordLength && options.stopwords.indexOf(word) === -1;
 		});
 
-	var hash = {};
+	var map = {};
 
-	for (i = ntext.length - 1; i >= 0; i--) {
+	for (i = 0; i < ntext.length; i++) {
 		var word = ntext[i];
-		if (hash[word]) {
-			hash[word]++;
+		if (map[word]) {
+			map[word] += 1;
 		} else {
-			hash[word] = 1;
+			// word score
+			map[word] = 1;
 		}
 	}
 
-	return hash;
+	return map;
 }
 
-function score(h1, h2) {
-	var result = 0;
-	var h2length = 0;
-	for (var key in h2) {
-		h2length++;
+function search(textMap, queryMap) {
+	var score = 0;
+	var queryMapLength = 0;
+	// var textMapLength = Object.keys(textMap).length / 2;
+	// console.log('============');
+	for (var key in queryMap) {
+		queryMapLength++;
 
-		if (h1[key]) {
-			result++;
+		if (textMap[key]) {
+			// console.log(key, textMap[key]);
+			// score += textMap[key];
+			score++;
 		}
 	}
 
-	if (h2length > 0) {
-		result = result / h2length;
+	if (queryMapLength > 0) {
+		score = score / queryMapLength;
+		// score = score * (queryMapLength / textMapLength);
 	}
 
-	return result;
+	// console.log(queryMap);
+
+	return score;
 }
 
 module.exports = function(text, options) {
 	options = getOptions(options);
-	var h1 = texthash(text, options);
+	var map = textmap(text, options);
 
 	return {
-		score: function(str) {
-			var h2 = texthash(str, options);
-			return score(h1, h2);
+		search: function(str) {
+			return search(map, textmap(str, options));
 		}
 	};
 };

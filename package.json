@@ -1,6 +1,6 @@
 {
-  "name": "text-score",
-  "version": "0.0.1",
+  "name": "in-text-search",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -11,19 +11,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mitica/text-score-js.git"
+    "url": "git+https://github.com/Mitica/in-text-search-js.git"
   },
   "keywords": [
     "text",
-    "score"
+    "score",
+    "search"
   ],
   "author": "Dumitru Cantea",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Mitica/text-score-js/issues"
+    "url": "https://github.com/Mitica/in-text-search-js/issues"
   },
-  "homepage": "https://github.com/Mitica/text-score-js#readme",
+  "homepage": "https://github.com/Mitica/in-text-search-js#readme",
   "devDependencies": {
     "mocha": "^2.5.3"
+  },
+  "dependencies": {
+    "stopwords-json": "^1.1.0"
   }
 }
